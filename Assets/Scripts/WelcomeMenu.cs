@@ -10,7 +10,10 @@ public class WelcomeMenu : MonoBehaviour
 
     public void ExitGame()
     {
-        Debug.Log("Exit");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 }
