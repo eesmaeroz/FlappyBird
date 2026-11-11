@@ -6,6 +6,7 @@ public class Bird : MonoBehaviour
 {
     public float jumpForce = 5f;
     public float topLimit = 6f;
+    public float bottomLimit = -6f;
     public Text scoreText;
     public GameObject gameOverPanel;
 
@@ -23,7 +24,6 @@ public class Bird : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 1f;
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
         PlaySound(swooshSound);
@@ -39,7 +39,7 @@ public class Bird : MonoBehaviour
             PlaySound(flapSound);
         }
 
-        if (transform.position.y > topLimit)
+        if (transform.position.y > topLimit || transform.position.y < bottomLimit)
         {
             Die();
         }
@@ -47,6 +47,8 @@ public class Bird : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (isDead) return;
+
         PlaySound(collisionSound);
         Die();
     }
@@ -67,7 +69,6 @@ public class Bird : MonoBehaviour
         isDead = true;
         PlaySound(dieSound);
         gameOverPanel.SetActive(true);
-        Time.timeScale = 0f;
     }
 
     void PlaySound(AudioClip clip)
@@ -80,7 +81,6 @@ public class Bird : MonoBehaviour
 
     public void RestartGame()
     {
-        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
