@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class Bird : MonoBehaviour
 {
     public float jumpForce = 5f;
+    public float topLimit = 6f;
     public Text scoreText;
     public GameObject gameOverPanel;
 
@@ -37,17 +38,17 @@ public class Bird : MonoBehaviour
             rb.velocity = Vector2.up * jumpForce;
             PlaySound(flapSound);
         }
+
+        if (transform.position.y > topLimit)
+        {
+            Die();
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isDead) return;
-
-        isDead = true;
         PlaySound(collisionSound);
-        PlaySound(dieSound);
-        gameOverPanel.SetActive(true);
-        Time.timeScale = 0f;
+        Die();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -57,6 +58,16 @@ public class Bird : MonoBehaviour
         score++;
         scoreText.text = score.ToString();
         PlaySound(pointSound);
+    }
+
+    void Die()
+    {
+        if (isDead) return;
+
+        isDead = true;
+        PlaySound(dieSound);
+        gameOverPanel.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     void PlaySound(AudioClip clip)
